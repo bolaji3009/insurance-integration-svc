@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: Insurance Integration Service
+  version: 1.0.0
+paths:
+  /api/eligibility/check:
+    post:
+      summary: Coverage eligibility check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EligibilityCommand'
+      responses:
+        '200':
+          description: OK
+  /api/claims:
+    post:
+      summary: Submit Claim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimCommand'
+      responses:
+        '202':
+          description: Accepted
+  /api/claims/{id}:
+    get:
+      summary: Claim status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/provisioning/patient:
+    post:
+      summary: Provision Patient in OpenMRS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisioningCommand'
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    EligibilityCommand:
+      type: object
+      required: [patient, coverage, provider]
+      properties:
+        patient:
+          type: object
+          properties:
+            id:
+              type: string
+        coverage:
+          type: object
+          properties:
+            id:
+              type: string
+        provider:
+          type: object
+          properties:
+            organizationId:
+              type: string
+    ClaimCommand:
+      type: object
+      required: [invoice, patient, coverage, provider, careSetting]
+      properties:
+        careSetting:
+          type: string
+          enum: [opd, ipd]
+        patient:
+          type: object
+          properties:
+            id:
+              type: string
+        coverage:
+          type: object
+          properties:
+            id:
+              type: string
+        provider:
+          type: object
+          properties:
+            organizationId:
+              type: string
+            band:
+              type: string
+              enum: [A,B,C,D]
+        invoice:
+          type: object
+          required: [number, lines]
+          properties:
+            number:
+              type: string
+            currency:
+              type: string
+              default: NGN
+            lines:
+              type: array
+              items:
+                type: object
+                required: [code, quantity, unitPrice]
+                properties:
+                  code:
+                    type: string
+                  description:
+                    type: string
+                  quantity:
+                    type: number
+                  unitPrice:
+                    type: number
+    ProvisioningCommand:
+      type: object
+      required: [policyNumber, givenName, familyName, gender, birthdate, assignedHospitalUuid, assignedFacilityAttributeTypeUuid]
+      properties:
+        policyNumber:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        gender:
+          type: string
+        birthdate:
+          type: string
+        assignedHospitalUuid:
+          type: string
+        assignedFacilityAttributeTypeUuid:
+          type: string

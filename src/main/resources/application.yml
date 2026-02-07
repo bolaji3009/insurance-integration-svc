@@ -1,0 +1,13 @@
+server:
+  port: 8085
+
+openimis:
+  fhirUrl: ${OPENIMIS_FHIR_URL:http://openimis-fhir:8080/fhir}
+  user: ${OPENIMIS_USER}
+  password: ${OPENIMIS_PASSWORD}
+
+openmrs:
+  fhirUrl: ${OPENMRS_FHIR_URL:http://ozone-openmrs:8080/ws/fhir2/R4}
+  restUrl: ${OPENMRS_REST_URL:http://ozone-openmrs:8080/ws/rest/v1}
+  user: ${OPENMRS_USER}
+  password: ${OPENMRS_PASSWORD}
